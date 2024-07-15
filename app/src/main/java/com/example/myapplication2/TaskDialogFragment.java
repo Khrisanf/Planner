@@ -2,30 +2,29 @@ package com.example.myapplication2;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 public class TaskDialogFragment extends DialogFragment {
 
-    private Spinner prioritySpinner;
-    private Spinner categorySpinner;
-    private EditText taskTitleEditText;
-    private EditText taskDescriptionEditText;
-    private TaskDialogListener listener;
-
     public interface TaskDialogListener {
-        void onTaskSaved(String title, String priority, String category, int color, String description);
+        void onTaskSaved(TaskData taskData, boolean isEditing);
     }
+
+    private TaskDialogListener listener;
+    private TaskData taskData;
+    private boolean isEditing;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -37,52 +36,89 @@ public class TaskDialogFragment extends DialogFragment {
         }
     }
 
-    @Nullable
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_new_task, container, false);
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_edit_element, null);
 
-        taskTitleEditText = view.findViewById(R.id.editTaskTitle);
-        taskDescriptionEditText = view.findViewById(R.id.editTaskDescription);
-        prioritySpinner = view.findViewById(R.id.priority_spinner);
-        categorySpinner = view.findViewById(R.id.category_spinner);
+        EditText editTitle = dialogView.findViewById(R.id.editTitle);
+        EditText editDescription = dialogView.findViewById(R.id.editDescription);
+        Spinner editPrioritySpinner = dialogView.findViewById(R.id.editPrioritySpinner);
+        Spinner editCategorySpinner = dialogView.findViewById(R.id.editCategorySpinner);
+        Button deleteButton = dialogView.findViewById(R.id.deleteButton);
+        Button cancelButton = dialogView.findViewById(R.id.cancelButton);
+        Button saveButton = dialogView.findViewById(R.id.saveButton);
 
-        ArrayAdapter<CharSequence> priorityAdapter = ArrayAdapter.createFromResource(getContext(),
+        ArrayAdapter<CharSequence> priorityAdapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.priority_array, android.R.layout.simple_spinner_item);
         priorityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        prioritySpinner.setAdapter(priorityAdapter);
+        editPrioritySpinner.setAdapter(priorityAdapter);
 
-        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(getContext(),
+        ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.category_array, android.R.layout.simple_spinner_item);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(categoryAdapter);
+        editCategorySpinner.setAdapter(categoryAdapter);
 
-        Button saveButton = view.findViewById(R.id.save_button);
+        if (taskData != null) {
+            isEditing = true;
+            editTitle.setText(taskData.title);
+            editDescription.setText(taskData.description);
+            int priorityPosition = priorityAdapter.getPosition(taskData.priority);
+            int categoryPosition = categoryAdapter.getPosition(taskData.category);
+            editPrioritySpinner.setSelection(priorityPosition);
+            editCategorySpinner.setSelection(categoryPosition);
+            deleteButton.setVisibility(View.VISIBLE);
+        } else {
+            isEditing = false;
+            deleteButton.setVisibility(View.GONE);
+        }
+
+        builder.setView(dialogView)
+                .setTitle(isEditing ? "Edit Task" : "New Task")
+                .setCancelable(false);
+
+        AlertDialog dialog = builder.create();
+
         saveButton.setOnClickListener(v -> {
-            String taskTitle = taskTitleEditText.getText().toString();
-            String taskDescription = taskDescriptionEditText.getText().toString();
-            String selectedPriority = prioritySpinner.getSelectedItem().toString();
-            String selectedCategory = categorySpinner.getSelectedItem().toString();
-            int taskColor = getPriorityColor(selectedPriority);
-            listener.onTaskSaved(taskTitle, selectedPriority, selectedCategory, taskColor, taskDescription);
-            dismiss();
+            String title = editTitle.getText().toString();
+            String description = editDescription.getText().toString();
+            String priority = editPrioritySpinner.getSelectedItem().toString();
+            String category = editCategorySpinner.getSelectedItem().toString();
+            int color = TaskUtils.getPriorityColor(priority);
+
+            if (taskData == null) {
+                taskData = new TaskData(title, priority, category, description, color);
+            } else {
+                taskData.title = title;
+                taskData.description = description;
+                taskData.priority = priority;
+                taskData.category = category;
+                taskData.color = color;
+            }
+
+            if (listener != null) {
+                listener.onTaskSaved(taskData, isEditing);
+            }
+
+            dialog.dismiss();
         });
 
-        return view;
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+
+        deleteButton.setOnClickListener(v -> {
+            if (isEditing && taskData != null) {
+                TaskManager taskManager = new TaskManager(requireContext(), getActivity().findViewById(R.id.container));
+                taskManager.removeTask(taskData);
+            }
+            dialog.dismiss();
+        });
+
+        return dialog;
     }
 
-    private int getPriorityColor(String priority) {
-        switch (priority) {
-            case "Очень высокий":
-                return Color.parseColor("#59080E"); // black-red
-            case "Высокий":
-                return Color.parseColor("#AA313A"); // red
-            case "Средний":
-                return Color.parseColor("#FA9F4C"); //orange
-            case "Низкий":
-                return Color.parseColor("#8EB49E"); //green
-            default:
-                return Color.parseColor("#D7D7E4"); //GREY
-        }
+    public void setTaskData(TaskData taskData) {
+        this.taskData = taskData;
     }
 }

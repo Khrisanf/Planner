@@ -40,7 +40,11 @@ public class MainActivity extends AppCompatActivity implements TaskDialogFragmen
     }
 
     @Override
-    public void onTaskSaved(String title, String priority, String category, int color, String description) {
-        taskManager.addTask(title, priority, category, description, color);
+    public void onTaskSaved(TaskData taskData, boolean isEditing) {
+        if (isEditing) {
+            taskManager.updateTask(taskData);
+        } else {
+            taskManager.addTask(taskData.title, taskData.priority, taskData.category, taskData.description, taskData.color);
+        }
     }
 }
