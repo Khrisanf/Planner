@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">My Application2</string>
+    <string name="priority_prompt">Выберите приоритет</string>
+    <string name="category_prompt">Выберите категорию</string>
+    <string-array name="priority_array">
+        <item>Очень высокий</item>
+        <item>Высокий</item>
+        <item>Средний</item>
+        <item>Низкий</item>
+        <item>Другой</item>
+    </string-array>
+    <string-array name="category_array">
+        <item>Работа</item>
+        <item>Дом</item>
+        <item>Семья</item>
+        <item>Персональное</item>
+    </string-array>
+</resources>

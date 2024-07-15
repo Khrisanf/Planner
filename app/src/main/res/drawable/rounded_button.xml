@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <shape xmlns:android="http://schemas.android.com/apk/res/android">
+        <solid android:color="#6200EE"/> <!-- Фиолетовый цвет -->
+        <corners android:radius="25dp"/> <!-- Скругленные углы -->
+    </shape>
+
+</selector>
