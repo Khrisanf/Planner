@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:hint="Название задачи"
         android:inputType="text"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:layout_marginBottom="10dp" />
 
     <EditText
         android:id="@+id/editTaskDescription"
@@ -19,25 +20,29 @@
         android:layout_height="wrap_content"
         android:hint="Описание задачи"
         android:inputType="text"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:layout_marginBottom="10dp" />
 
     <Spinner
         android:id="@+id/priority_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
-        android:prompt="@string/priority_prompt" />
+        android:prompt="@string/priority_prompt"
+        android:layout_marginBottom="10dp" />
 
     <Spinner
         android:id="@+id/category_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
-        android:prompt="@string/category_prompt" />
+        android:prompt="@string/category_prompt"
+        android:layout_marginBottom="10dp" />
 
     <Button
         android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Сохранить" />
+        android:text="Сохранить"
+        android:layout_marginTop="10dp" />
 </LinearLayout>

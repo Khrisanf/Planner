@@ -39,9 +39,17 @@ public class TaskManager {
             }
         });
 
+        // Устанавливаем отступы программно для всех сторон
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(2, 2, 2, 2);  // Отступы в 2dp для всех сторон
+        newTaskView.setLayoutParams(params);
+
         container.addView(newTaskView);
     }
-
+    
     public void updateTask(TaskData taskData) {
         for (int i = 0; i < container.getChildCount(); i++) {
             View child = container.getChildAt(i);
