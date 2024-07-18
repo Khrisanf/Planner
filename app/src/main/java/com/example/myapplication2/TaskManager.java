@@ -3,18 +3,18 @@ package com.example.myapplication2;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 
-import androidx.appcompat.app.AlertDialog;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskManager {
 
     private final Context context;
     private final LinearLayout container;
+    private final List<View> taskViews = new ArrayList<>();
 
     public TaskManager(Context context, LinearLayout container) {
         this.context = context;
@@ -34,8 +34,8 @@ public class TaskManager {
         taskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TaskData taskData = (TaskData) taskButton.getTag();
-                showEditTaskDialog(taskButton, taskData);
+                TaskData data = (TaskData) taskButton.getTag();
+                showEditTaskDialog(taskButton, data);
             }
         });
 
@@ -47,9 +47,27 @@ public class TaskManager {
         params.setMargins(2, 2, 2, 2);  // Отступы в 2dp для всех сторон
         newTaskView.setLayoutParams(params);
 
+        taskViews.add(newTaskView);
         container.addView(newTaskView);
     }
-    
+
+    public void searchTasks(String query) {
+        for (View taskView : taskViews) {
+            TaskData taskData = (TaskData) taskView.findViewById(R.id.taskButton).getTag();
+            if (taskData.title.contains(query) || taskData.description.contains(query)) {
+                taskView.setVisibility(View.VISIBLE);
+            } else {
+                taskView.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void clearSearch() {
+        for (View taskView : taskViews) {
+            taskView.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void updateTask(TaskData taskData) {
         for (int i = 0; i < container.getChildCount(); i++) {
             View child = container.getChildAt(i);
@@ -69,6 +87,7 @@ public class TaskManager {
             Button taskButton = child.findViewById(R.id.taskButton);
             if (taskButton != null && taskData.equals(taskButton.getTag())) {
                 container.removeView(child);
+                taskViews.remove(child);
                 break;
             }
         }

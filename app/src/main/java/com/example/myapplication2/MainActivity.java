@@ -1,23 +1,28 @@
 package com.example.myapplication2;
 
 import android.os.Bundle;
-import androidx.activity.EdgeToEdge;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import android.view.View;
-import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity implements TaskDialogFragment.TaskDialogListener {
 
     private TaskManager taskManager;
+    private EditText searchEditText;
+    private Button searchButton;
+    private Button clearSearchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -29,13 +34,24 @@ public class MainActivity extends AppCompatActivity implements TaskDialogFragmen
         LinearLayout container = findViewById(R.id.container);
         taskManager = new TaskManager(this, container);
 
+        searchEditText = findViewById(R.id.searchEditText);
+        searchButton = findViewById(R.id.searchButton);
+        clearSearchButton = findViewById(R.id.clearSearchButton);
+
+        searchButton.setOnClickListener(v -> {
+            String query = searchEditText.getText().toString();
+            taskManager.searchTasks(query);
+        });
+
+        clearSearchButton.setOnClickListener(v -> {
+            searchEditText.setText("");
+            taskManager.clearSearch();
+        });
+
         FloatingActionButton buttonAdd = findViewById(R.id.floatingActionButton);
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TaskDialogFragment taskDialog = new TaskDialogFragment();
-                taskDialog.show(getSupportFragmentManager(), "taskDialog");
-            }
+        buttonAdd.setOnClickListener(v -> {
+            TaskDialogFragment taskDialog = new TaskDialogFragment();
+            taskDialog.show(getSupportFragmentManager(), "taskDialog");
         });
     }
 
