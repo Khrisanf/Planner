@@ -1,8 +1,8 @@
 package com.example.myapplication2;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -16,9 +16,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class MainActivity extends AppCompatActivity implements TaskDialogFragment.TaskDialogListener {
 
     private TaskManager taskManager;
-    private EditText searchEditText;
-    private Button searchButton;
-    private Button clearSearchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,22 +28,31 @@ public class MainActivity extends AppCompatActivity implements TaskDialogFragmen
             return insets;
         });
 
+        EditText searchInput = findViewById(R.id.searchEditText); // Обновленный ID
+
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Не используем, но метод нужно переопределить
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 0) {
+                    taskManager.resetSearch(); // Сброс фильтра, если текстовое поле пустое
+                } else {
+                    taskManager.updateSearch(s.toString()); // Обновление поиска с текущим текстом
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Не используем, но метод нужно переопределить
+            }
+        });
+
         LinearLayout container = findViewById(R.id.container);
         taskManager = new TaskManager(this, container);
-
-        searchEditText = findViewById(R.id.searchEditText);
-        searchButton = findViewById(R.id.searchButton);
-        clearSearchButton = findViewById(R.id.clearSearchButton);
-
-        searchButton.setOnClickListener(v -> {
-            String query = searchEditText.getText().toString();
-            taskManager.searchTasks(query);
-        });
-
-        clearSearchButton.setOnClickListener(v -> {
-            searchEditText.setText("");
-            taskManager.clearSearch();
-        });
 
         FloatingActionButton buttonAdd = findViewById(R.id.floatingActionButton);
         buttonAdd.setOnClickListener(v -> {

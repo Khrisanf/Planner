@@ -3,13 +3,13 @@ package com.example.myapplication2;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TaskManager {
 
@@ -40,12 +40,11 @@ public class TaskManager {
             }
         });
 
-        // Устанавливаем отступы программно для всех сторон
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        params.setMargins(2, 2, 2, 2);  // Отступы в 2dp для всех сторон
+        params.setMargins(2, 2, 2, 2);
         newTaskView.setLayoutParams(params);
 
         taskViews.add(newTaskView);
@@ -66,10 +65,16 @@ public class TaskManager {
         }
     }
 
-    public void clearSearch() {
+    // Метод для сброса фильтра поиска
+    public void resetSearch() {
         for (View taskView : taskViews) {
             taskView.setVisibility(View.VISIBLE);
         }
+    }
+
+    // Метод для обновления поиска
+    public void updateSearch(String query) {
+        searchTasks(query);
     }
 
     public void updateTask(TaskData taskData) {
