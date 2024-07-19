@@ -107,4 +107,23 @@ public class TaskManager {
         dialogFragment.setTaskData(taskData);
         dialogFragment.show(((MainActivity) context).getSupportFragmentManager(), "taskDialog");
     }
+    public void filterTasks(String query, String category, String priority) {
+        Pattern pattern = Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE);
+        for (View taskView : taskViews) {
+            TaskData taskData = (TaskData) taskView.findViewById(R.id.taskButton).getTag();
+            Matcher titleMatcher = pattern.matcher(taskData.title);
+            Matcher descriptionMatcher = pattern.matcher(taskData.description);
+
+            boolean matchesQuery = titleMatcher.find() || descriptionMatcher.find();
+            boolean matchesCategory = category.equals("Все") || taskData.category.equals(category);
+            boolean matchesPriority = priority.equals("Все") || taskData.priority.equals(priority);
+
+            if (matchesQuery && matchesCategory && matchesPriority) {
+                taskView.setVisibility(View.VISIBLE);
+            } else {
+                taskView.setVisibility(View.GONE);
+            }
+        }
+    }
+
 }

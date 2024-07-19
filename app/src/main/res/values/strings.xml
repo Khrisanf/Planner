@@ -15,4 +15,21 @@
         <item>Семья</item>
         <item>Персональное</item>
     </string-array>
+
+    <string-array name="categories">
+        <item>Все</item>
+        <item>Работа</item>
+        <item>Дом</item>
+        <item>Семья</item>
+        <item>Персональное</item>
+    </string-array>
+
+    <string-array name="priorities">
+        <item>Все</item>
+        <item>Очень высокий</item>
+        <item>Высокий</item>
+        <item>Средний</item>
+        <item>Низкий</item>
+        <item>Другой</item>
+    </string-array>
 </resources>
