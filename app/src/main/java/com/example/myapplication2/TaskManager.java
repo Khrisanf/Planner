@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +53,12 @@ public class TaskManager {
     }
 
     public void searchTasks(String query) {
+        Pattern pattern = Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE);
         for (View taskView : taskViews) {
             TaskData taskData = (TaskData) taskView.findViewById(R.id.taskButton).getTag();
-            if (taskData.title.contains(query) || taskData.description.contains(query)) {
+            Matcher titleMatcher = pattern.matcher(taskData.title);
+            Matcher descriptionMatcher = pattern.matcher(taskData.description);
+            if (titleMatcher.find() || descriptionMatcher.find()) {
                 taskView.setVisibility(View.VISIBLE);
             } else {
                 taskView.setVisibility(View.GONE);
