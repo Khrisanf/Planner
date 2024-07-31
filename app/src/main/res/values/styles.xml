@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
 
     <!-- Custom styles for buttons -->
     <style name="SaveButtonStyle">
@@ -18,11 +19,11 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
-        <style name="TaskButtonStyle">
-            <item name="android:layout_marginTop">5dp</item>
-            <item name="android:layout_marginBottom">5dp</item>
-            <item name="android:layout_marginLeft">0dp</item>
-            <item name="android:layout_marginRight">0dp</item>
-        </style>
 
+    <style name="TaskButtonStyle">
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
+    </style>
 </resources>

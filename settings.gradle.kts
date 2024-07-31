@@ -11,14 +11,14 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS) // Измените на PREFER_SETTINGS или PREFER_PROJECT в зависимости от вашего предпочтения
     repositories {
         google()
         mavenCentral()
     }
 }
 
-rootProject.name = "My Application2"
+rootProject.name = "MyApplication2"
 include(":app")
- 
