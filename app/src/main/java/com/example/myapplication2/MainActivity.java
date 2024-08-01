@@ -73,12 +73,13 @@ public class MainActivity extends AppCompatActivity implements TaskDialogFragmen
 
     @Override
     public void onTaskSaved(TaskData taskData, boolean isEditing) {
+        SaveTask newTask = new SaveTask(taskData.title, taskData.priority, taskData.category, taskData.description, taskData.color);
         if (isEditing) {
             taskManager.updateTask(taskData);
+            saveTaskViewModel.update(newTask);
         } else {
             taskManager.addTask(taskData.title, taskData.priority, taskData.category, taskData.description, taskData.color);
-            SaveTask newTask = new SaveTask(taskData.title, taskData.priority, taskData.category, taskData.description, taskData.color); // Создание новой задачи для сохранения
-            saveTaskViewModel.insert(newTask); // Сохранение новой задачи в базу данных
+            saveTaskViewModel.insert(newTask);
         }
         applyFilters();
     }
