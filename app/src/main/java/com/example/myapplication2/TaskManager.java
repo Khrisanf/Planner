@@ -22,6 +22,14 @@ public class TaskManager {
         this.container = container;
     }
 
+    public void setTasks(List<SaveTask> tasks) {
+        container.removeAllViews();
+        taskViews.clear();
+        for (SaveTask task : tasks) {
+            addTask(task.getTaskName(), task.getPriority(), task.getCategory(), task.getDescription(), task.getColor());
+        }
+    }
+
     public void addTask(String title, String priority, String category, String description, int color) {
         View newTaskView = LayoutInflater.from(context).inflate(R.layout.task_item, container, false);
 
@@ -107,6 +115,7 @@ public class TaskManager {
         dialogFragment.setTaskData(taskData);
         dialogFragment.show(((MainActivity) context).getSupportFragmentManager(), "taskDialog");
     }
+
     public void filterTasks(String query, String category, String priority) {
         Pattern pattern = Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE);
         for (View taskView : taskViews) {
@@ -125,5 +134,4 @@ public class TaskManager {
             }
         }
     }
-
 }

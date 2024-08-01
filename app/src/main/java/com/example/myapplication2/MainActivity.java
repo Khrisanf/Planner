@@ -5,14 +5,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.room.Room;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity implements TaskDialogFragment.TaskDialogListener, FilterDialogFragment.FilterDialogListener {
@@ -21,17 +18,12 @@ public class MainActivity extends AppCompatActivity implements TaskDialogFragmen
     private String currentCategoryFilter = "Все";
     private String currentPriorityFilter = "Все";
     private String currentSearchQuery = "";
-    private AppDatabase db;  // Добавляем переменную для базы данных
+    private SaveTaskViewModel saveTaskViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Инициализация базы данных Room
-        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "mydatabase.db")
-                .fallbackToDestructiveMigration()
-                .build();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -39,11 +31,12 @@ public class MainActivity extends AppCompatActivity implements TaskDialogFragmen
             return insets;
         });
 
+        saveTaskViewModel = new ViewModelProvider(this).get(SaveTaskViewModel.class);
+
         EditText searchInput = findViewById(R.id.searchEditText);
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -52,12 +45,17 @@ public class MainActivity extends AppCompatActivity implements TaskDialogFragmen
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         LinearLayout container = findViewById(R.id.container);
         taskManager = new TaskManager(this, container);
+
+        // Подписка на изменения данных в базе данных
+        saveTaskViewModel.getAllTasks().observe(this, tasks -> {
+            taskManager.setTasks(tasks);
+            applyFilters();
+        });
 
         FloatingActionButton buttonAdd = findViewById(R.id.floatingActionButton);
         buttonAdd.setOnClickListener(v -> {
@@ -79,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements TaskDialogFragmen
             taskManager.updateTask(taskData);
         } else {
             taskManager.addTask(taskData.title, taskData.priority, taskData.category, taskData.description, taskData.color);
+            SaveTask newTask = new SaveTask(taskData.title, taskData.priority, taskData.category, taskData.description, taskData.color); // Создание новой задачи для сохранения
+            saveTaskViewModel.insert(newTask); // Сохранение новой задачи в базу данных
         }
         applyFilters();
     }

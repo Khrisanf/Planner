@@ -1,9 +1,10 @@
 package com.example.myapplication2;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Delete;
 import androidx.room.Update;
 
 import java.util.List;
@@ -19,6 +20,6 @@ public interface SaveTaskDao {
     @Delete
     void delete(SaveTask task);
 
-    @Query("SELECT * FROM SaveTask")
-    List<SaveTask> getAllTasks();
+    @Query("SELECT * FROM task_table")  // Обновлено с использованием имени таблицы
+    LiveData<List<SaveTask>> getAllTasks();
 }
