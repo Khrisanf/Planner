@@ -19,6 +19,13 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        // Добавляем настройки для экспорта схемы Room
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] = "$projectDir/schemas".toString()
+            }
+        }
     }
 
     buildTypes {
@@ -58,9 +65,9 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha01") // Версия должна быть актуальной
-    implementation("com.google.android.material:material:1.8.0") // Добавляем зависимость для Material Components
-    implementation("androidx.appcompat:appcompat:1.6.1") // Добавляем зависимость для AppCompat
+    implementation("androidx.compose.material3:material3:1.0.0-alpha01")
+    implementation("com.google.android.material:material:1.8.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -74,7 +81,6 @@ dependencies {
 
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
-
     implementation("androidx.room:room-ktx:$room_version")
     implementation("androidx.room:room-rxjava2:$room_version")
     implementation("androidx.room:room-rxjava3:$room_version")

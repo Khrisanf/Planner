@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -20,11 +21,17 @@ public class MainActivity extends AppCompatActivity implements TaskDialogFragmen
     private String currentCategoryFilter = "Все";
     private String currentPriorityFilter = "Все";
     private String currentSearchQuery = "";
+    private AppDatabase db;  // Добавляем переменную для базы данных
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Инициализация базы данных Room
+        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "mydatabase.db")
+                .fallbackToDestructiveMigration()
+                .build();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
