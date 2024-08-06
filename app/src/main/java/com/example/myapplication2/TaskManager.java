@@ -26,18 +26,19 @@ public class TaskManager {
         container.removeAllViews();
         taskViews.clear();
         for (SaveTask task : tasks) {
-            addTask(task.getTaskName(), task.getPriority(), task.getCategory(), task.getDescription(), task.getColor());
+            addTask(task.getId(), task.getTaskName(), task.getPriority(), task.getCategory(), task.getDescription(), task.getColor());
         }
     }
 
-    public void addTask(String title, String priority, String category, String description, int color) {
+    public void addTask(int id, String title, String priority, String category, String description, int color) {
         View newTaskView = LayoutInflater.from(context).inflate(R.layout.task_item, container, false);
 
         Button taskButton = newTaskView.findViewById(R.id.taskButton);
         taskButton.setText(title);
         taskButton.setBackgroundColor(color);
 
-        TaskData taskData = new TaskData(title, priority, category, description, color);
+        // Создание объекта TaskData с учётом id
+        TaskData taskData = new TaskData(id, title, priority, category, description, color);
         taskButton.setTag(taskData);
 
         taskButton.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +59,7 @@ public class TaskManager {
         taskViews.add(newTaskView);
         container.addView(newTaskView);
     }
+
 
     public void searchTasks(String query) {
         Pattern pattern = Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE);
@@ -89,7 +91,8 @@ public class TaskManager {
         for (int i = 0; i < container.getChildCount(); i++) {
             View child = container.getChildAt(i);
             Button taskButton = child.findViewById(R.id.taskButton);
-            if (taskButton != null && taskData.equals(taskButton.getTag())) {
+            TaskData currentData = (TaskData) taskButton.getTag();
+            if (currentData.id == taskData.id) {
                 taskButton.setText(taskData.title);
                 taskButton.setBackgroundColor(taskData.color);
                 taskButton.setTag(taskData);
@@ -102,13 +105,15 @@ public class TaskManager {
         for (int i = 0; i < container.getChildCount(); i++) {
             View child = container.getChildAt(i);
             Button taskButton = child.findViewById(R.id.taskButton);
-            if (taskButton != null && taskData.equals(taskButton.getTag())) {
+            TaskData currentData = (TaskData) taskButton.getTag();
+            if (currentData.id == taskData.id) {  
                 container.removeView(child);
                 taskViews.remove(child);
                 break;
             }
         }
     }
+
 
     private void showEditTaskDialog(Button taskButton, TaskData taskData) {
         TaskDialogFragment dialogFragment = new TaskDialogFragment();

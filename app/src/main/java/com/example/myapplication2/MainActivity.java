@@ -75,14 +75,17 @@ public class MainActivity extends AppCompatActivity implements TaskDialogFragmen
     public void onTaskSaved(TaskData taskData, boolean isEditing) {
         SaveTask newTask = new SaveTask(taskData.title, taskData.priority, taskData.category, taskData.description, taskData.color);
         if (isEditing) {
+            newTask.setId(taskData.id); // Установка ID существующей задачи для обновления
             taskManager.updateTask(taskData);
             saveTaskViewModel.update(newTask);
         } else {
-            taskManager.addTask(taskData.title, taskData.priority, taskData.category, taskData.description, taskData.color);
+            // Передаем id как первый параметр
+            taskManager.addTask(taskData.id, taskData.title, taskData.priority, taskData.category, taskData.description, taskData.color);
             saveTaskViewModel.insert(newTask);
         }
         applyFilters();
     }
+
 
     @Override
     public void onApplyFilters(String category, String priority) {
