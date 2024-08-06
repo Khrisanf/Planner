@@ -26,7 +26,6 @@ public class SaveTaskViewModel extends AndroidViewModel {
     public void update(SaveTask task) {
         repository.update(task);
     }
-
     public void delete(SaveTask task) {
         repository.delete(task);
     }

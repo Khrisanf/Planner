@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -20,6 +19,7 @@ public class TaskDialogFragment extends DialogFragment {
 
     public interface TaskDialogListener {
         void onTaskSaved(TaskData taskData, boolean isEditing);
+        void onTaskDeleted(TaskData taskData); // Добавляем метод для удаления задачи
     }
 
     private TaskDialogListener listener;
@@ -109,8 +109,7 @@ public class TaskDialogFragment extends DialogFragment {
 
         deleteButton.setOnClickListener(v -> {
             if (isEditing && taskData != null) {
-                TaskManager taskManager = new TaskManager(requireContext(), getActivity().findViewById(R.id.container));
-                taskManager.removeTask(taskData);
+                listener.onTaskDeleted(taskData); // Вызываем метод удаления
             }
             dialog.dismiss();
         });

@@ -85,7 +85,14 @@ public class MainActivity extends AppCompatActivity implements TaskDialogFragmen
         }
         applyFilters();
     }
+    @Override
+    public void onTaskDeleted(TaskData taskData) {
+        SaveTask taskToDelete = new SaveTask(taskData.title, taskData.priority, taskData.category, taskData.description, taskData.color);
+        taskToDelete.setId(taskData.id); // Устанавливаем ID для правильного удаления
 
+        taskManager.removeTask(taskData);
+        saveTaskViewModel.delete(taskToDelete);
+    }
 
     @Override
     public void onApplyFilters(String category, String priority) {
