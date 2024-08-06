@@ -106,7 +106,7 @@ public class TaskManager {
             View child = container.getChildAt(i);
             Button taskButton = child.findViewById(R.id.taskButton);
             TaskData currentData = (TaskData) taskButton.getTag();
-            if (currentData.id == taskData.id) {  
+            if (currentData.id == taskData.id) {
                 container.removeView(child);
                 taskViews.remove(child);
                 break;
