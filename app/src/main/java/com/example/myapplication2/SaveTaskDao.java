@@ -20,6 +20,6 @@ public interface SaveTaskDao {
     @Delete
     void delete(SaveTask task);
 
-    @Query("SELECT * FROM task_table")  // Обновлено с использованием имени таблицы
+    @Query("SELECT * FROM task_table")  
     LiveData<List<SaveTask>> getAllTasks();
 }
